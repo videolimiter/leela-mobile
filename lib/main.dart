@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leela_mobile/pages/leelapage.dart';
+import 'package:leela_mobile/src/features/auth/screens/welcome/welcome_screen.dart';
 
 /// Flutter code sample for [AppBar].
 
@@ -9,7 +10,9 @@ List<String> titles = <String>[
   'Sunny',
 ];
 
-void main() => runApp(const LeelaGameApp());
+void main() {
+  runApp(const LeelaGameApp());
+}
 
 class LeelaGameApp extends StatelessWidget {
   const LeelaGameApp({super.key});
@@ -20,7 +23,7 @@ class LeelaGameApp extends StatelessWidget {
       title: 'Leela Game',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: const LeelaPage(),
+      home: const WelcomeScreen(),
     );
   }
 }
