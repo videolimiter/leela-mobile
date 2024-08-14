@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:leela_mobile/design/colors.dart';
 import 'package:leela_mobile/design/dimensions.dart';
-import 'package:http/http.dart' as http;
 import 'package:leela_mobile/src/config.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  final dio = Dio();
   void _submit() async {
     final isValidEmail = _emailController.text.isNotEmpty &&
         EmailValidator.validate(_emailController.text);
@@ -29,18 +29,21 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    var loginData = {
+    final loginData = {
       "email": _emailController.text,
       "password": _passwordController.text,
     };
-    var response = await http.post(Uri.parse(LOGIN_URL),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(loginData));
-    debugPrint(response.body as String?);
-    if (response.statusCode == 201) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Вы успешно вошли')));
-    } else {
+    print(LOGIN_URL);
+    try {
+      final response = await dio.post(
+        LOGIN_URL,
+        data: loginData,
+      );
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Вы успешно вошли')));
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Неверный пароль или email')));
     }
