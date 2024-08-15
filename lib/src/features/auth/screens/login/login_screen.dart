@@ -1,11 +1,13 @@
-import 'dart:convert';
-
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:leela_mobile/design/colors.dart';
 import 'package:leela_mobile/design/dimensions.dart';
 import 'package:leela_mobile/src/config.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:leela_mobile/src/pages/leelapage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,8 +19,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final dio = Dio();
+
   void _submit() async {
+    final dio = Dio();
+    final cookieJar = CookieJar();
+    dio.interceptors.add(CookieManager(cookieJar));
     final isValidEmail = _emailController.text.isNotEmpty &&
         EmailValidator.validate(_emailController.text);
     final isValidPassword = _passwordController.text.isNotEmpty &&
@@ -34,14 +39,18 @@ class _LoginScreenState extends State<LoginScreen> {
       "password": _passwordController.text,
     };
     print(LOGIN_URL);
+
     try {
       final response = await dio.post(
         LOGIN_URL,
         data: loginData,
       );
+
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Вы успешно вошли')));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LeelaPage()));
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -70,9 +79,11 @@ class _LoginScreenState extends State<LoginScreen> {
               autovalidateMode: AutovalidateMode.always,
               child: Container(
                   padding: const EdgeInsetsDirectional.symmetric(vertical: 20),
-                  child: Column(
+                  child: AutofillGroup(
+                      child: Column(
                     children: [
                       TextFormField(
+                        autofillHints: const [AutofillHints.email],
                         controller: _emailController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
@@ -91,6 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
+                        autofillHints: const [AutofillHints.password],
                         controller: _passwordController,
                         validator: (String? value) {
                           if (value == null ||
@@ -119,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: () => _submit(),
                               child: const Text('Login')))
                     ],
-                  )))
+                  ))))
         ],
       ),
     ))));

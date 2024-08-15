@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:leela_mobile/design/colors.dart';
 import 'package:leela_mobile/design/dimensions.dart';
-import 'package:leela_mobile/pages/field/cell.dart';
-import 'package:leela_mobile/pages/field/leela_field.dart';
+import 'package:leela_mobile/src/pages/field/leela_field.dart';
 
 class LeelaPage extends StatelessWidget {
   const LeelaPage({super.key});
