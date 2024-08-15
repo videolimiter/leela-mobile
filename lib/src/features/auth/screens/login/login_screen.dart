@@ -3,10 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:leela_mobile/design/colors.dart';
-import 'package:leela_mobile/design/dimensions.dart';
 import 'package:leela_mobile/src/config.dart';
-import 'package:auto_route/auto_route.dart';
+import 'package:leela_mobile/src/design/colors.dart';
+import 'package:leela_mobile/src/design/dimensions.dart';
 import 'package:leela_mobile/src/pages/leelapage.dart';
 
 class LoginScreen extends StatefulWidget {

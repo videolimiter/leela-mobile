@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:leela_mobile/design/colors.dart';
+import 'package:leela_mobile/src/design/colors.dart';
 
 class Cell extends StatelessWidget {
   const Cell({super.key, required this.text});
