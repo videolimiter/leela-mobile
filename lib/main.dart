@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:leela_mobile/src/api/get_user.dart';
+import 'package:leela_mobile/src/api/user.dart';
 import 'package:leela_mobile/src/features/auth/screens/welcome/welcome_screen.dart';
 import 'package:leela_mobile/src/pages/field/leela_field.dart';
 import 'package:leela_mobile/src/pages/leelapage.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leela_mobile/src/api/user.dart';
 import 'package:leela_mobile/src/design/colors.dart';
 import 'package:leela_mobile/src/design/dimensions.dart';
 import 'package:leela_mobile/src/pages/field/leela_field.dart';
@@ -8,7 +9,6 @@ class LeelaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
           backgroundColor: sixthColor,
@@ -26,6 +26,15 @@ class LeelaPage extends StatelessWidget {
         color: sixthColor,
         child: const Align(alignment: Alignment.center, child: LeelaField()),
       ),
+      drawer: Drawer(
+          child: ListView(children: [
+        const DrawerHeader(child: Text('Меню')),
+        ListTile(
+            title: const Text("Logout"),
+            onTap: () {
+              logoutUser();
+            })
+      ])),
     );
   }
 }
