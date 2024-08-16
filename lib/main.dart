@@ -20,7 +20,6 @@ class LeelaGameApp extends StatelessWidget {
       home: FutureBuilder<bool>(
         future: getUser(),
         builder: (context, snapshot) {
-          print(snapshot.data);
           if (snapshot.hasData && snapshot.data != false) {
             // Если ответ положительный, показываем первый экран
             return const LeelaPage();

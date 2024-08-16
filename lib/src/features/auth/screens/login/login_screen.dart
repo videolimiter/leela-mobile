@@ -1,9 +1,14 @@
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:leela_mobile/src/api/cookies.dart';
 import 'package:leela_mobile/src/api/dio/dio_client.dart';
 import 'package:leela_mobile/src/config.dart';
 import 'package:leela_mobile/src/design/colors.dart';
 import 'package:leela_mobile/src/design/dimensions.dart';
+import 'package:leela_mobile/src/pages/leelapage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +22,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   void _submit() async {
+    final cookieJar = CookieJar();
+    DioClient.instance.dio.interceptors.add(CookieManager(cookieJar));
+
     final isValidEmail = _emailController.text.isNotEmpty &&
         EmailValidator.validate(_emailController.text);
     final isValidPassword = _passwordController.text.isNotEmpty &&
@@ -31,21 +39,20 @@ class _LoginScreenState extends State<LoginScreen> {
       "email": _emailController.text,
       "password": _passwordController.text,
     };
-    print(LOGIN_URL);
 
     try {
       final response =
           await DioClient.instance.post(LOGIN_URL, data: loginData);
 
-      // if (response.statusCode == 201) {
-      //   final cookies = await cookieJar.loadForRequest(Uri.parse(LOGIN_URL));
-      //   saveCookies(LOGIN_URL, cookies);
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(const SnackBar(content: Text('Вы успешно вошли')));
-      //   Navigator.push(context,
-      //       MaterialPageRoute(builder: (context) => const LeelaPage()));
-      // }
-    } catch (e) {
+      if (response.statusCode == 201) {
+        final cookies = await cookieJar.loadForRequest(Uri.parse(LOGIN_URL));
+        saveCookies(LOGIN_URL, cookies);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Вы успешно вошли')));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LeelaPage()));
+      }
+    } on DioException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Неверный пароль или email')));
     }

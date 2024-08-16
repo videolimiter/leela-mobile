@@ -8,7 +8,7 @@ class Cell extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
         child: InkWell(
-            onTap: () => {debugPrint('Тапнута: $text')},
+            onTap: () => {},
             child: Container(
                 color: secondaryColor,
                 height: 25,

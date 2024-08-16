@@ -1,5 +1,7 @@
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:leela_mobile/src/api/cookies.dart';
 import 'package:leela_mobile/src/config.dart';
 
 class DioClient {
@@ -17,20 +19,42 @@ class DioClient {
       responseType: ResponseType.json,
     );
     dio = Dio(options);
-    dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-      // print("app request data ${options.data}");
+    final cookieJar = CookieJar();
+    dio.interceptors
+        .add(InterceptorsWrapper(onRequest: (options, handler) async {
+      final cookies = await loadCookies(LOGIN_URL);
+      if (cookies.isNotEmpty) {
+        options.headers = {
+          'Cookie': cookies
+              .map((cookie) => '${cookie.name}=${cookie.value}')
+              .join('; '),
+        };
+      }
+      if (kDebugMode) {
+        print("app request data ${options.data}");
+      }
       return handler.next(options);
-    }, onResponse: (response, handler) {
+    }, onResponse: (response, handler) async {
+      // Парсим куки из заголовка
+      if (response.headers['set-cookie'] != null) {
+        final cookies = await cookieJar.loadForRequest(Uri.parse(LOGIN_URL));
+        await deleteCookies(LOGIN_URL);
+        await saveCookies(LOGIN_URL, cookies);
+      }
+
       if (kDebugMode) {
         print("app response data ${response.data}");
       }
       return handler.next(response);
-    }, onError: (DioException e, handler) {
+    }, onError: (DioException e, handler) async {
       if (kDebugMode) {
         print("app error data $e");
       }
       ErrorEntity eInfo = createErrorEntity(e);
-      onError(eInfo);
+      if (kDebugMode) {
+        onError(eInfo);
+      }
+      return handler.next(e);
     }));
   }
 
@@ -116,16 +140,24 @@ ErrorEntity createErrorEntity(DioException error) {
 }
 
 void onError(ErrorEntity eInfo) {
-  print('error.code -> ${eInfo.code}, error.message -> ${eInfo.message}');
+  if (kDebugMode) {
+    print('error.code -> ${eInfo.code}, error.message -> ${eInfo.message}');
+  }
   switch (eInfo.code) {
     case 400:
-      print("Server syntax error");
+      if (kDebugMode) {
+        print("Server syntax error");
+      }
       break;
     case 401:
-      print("You are denied to continue");
+      if (kDebugMode) {
+        print("You are denied to continue");
+      }
       break;
     case 500:
-      print("Server internal error");
+      if (kDebugMode) {
+        print("Server internal error");
+      }
       break;
     default:
       print("Unknown error");

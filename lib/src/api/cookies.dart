@@ -16,6 +16,18 @@ Future<void> saveCookies(String url, List<Cookie> cookies) async {
   _cookieJar.saveFromResponse(Uri.parse(url), cookies);
 }
 
+Future<void> deleteCookies(String url) async {
+  // Удаляем куки из FlutterSecureStorage
+  final keys = await _secureStorage.readAll();
+  for (final entry in keys.entries) {
+    if (entry.key.startsWith('cookie_')) {
+      await _secureStorage.delete(key: entry.key);
+    }
+  }
+  // Удаляем куки из CookieJar
+  _cookieJar.delete(Uri.parse(url));
+}
+
 // Загрузка куки
 Future<List<Cookie>> loadCookies(String url) async {
   final cookies = <Cookie>[];
