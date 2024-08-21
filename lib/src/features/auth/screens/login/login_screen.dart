@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:leela_mobile/src/api/cookies.dart';
 import 'package:leela_mobile/src/api/dio/dio_client.dart';
 import 'package:leela_mobile/src/config.dart';
+import 'package:leela_mobile/src/core/authenticated.dart';
 import 'package:leela_mobile/src/design/colors.dart';
 import 'package:leela_mobile/src/design/dimensions.dart';
 import 'package:leela_mobile/src/pages/leelapage.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,9 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   void _submit() async {
-    final cookieJar = CookieJar();
-    DioClient.instance.dio.interceptors.add(CookieManager(cookieJar));
-
     final isValidEmail = _emailController.text.isNotEmpty &&
         EmailValidator.validate(_emailController.text);
     final isValidPassword = _passwordController.text.isNotEmpty &&
@@ -35,31 +34,32 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    final loginData = {
-      "email": _emailController.text,
-      "password": _passwordController.text,
-    };
+    final authProvider = Provider.of<IsAuth>(context, listen: false);
 
-    try {
-      final response =
-          await DioClient.instance.post(LOGIN_URL, data: loginData);
+    await authProvider.login(_emailController.text, _passwordController.text);
 
-      if (response.statusCode == 201) {
-        final cookies = await cookieJar.loadForRequest(Uri.parse(LOGIN_URL));
-        saveCookies(LOGIN_URL, cookies);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Вы успешно вошли')));
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const LeelaPage()));
-      }
-    } on DioException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Неверный пароль или email')));
-    }
+    // try {
+    //   final response =
+    //       await DioClient.instance.post(LOGIN_URL, data: loginData);
+
+    //   if (response.statusCode == 201) {
+    //     ScaffoldMessenger.of(context)
+    //         .showSnackBar(const SnackBar(content: Text('Вы успешно вошли')));
+    //     final model = context.read<IsAuth>();
+    //     model.setIsAuthenticated(true);
+
+    //     // Navigator.push(context,
+    //     //     MaterialPageRoute(builder: (context) => const LeelaPage()));
+    //   }
+    // } on DioException catch (e) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(content: Text('Неверный пароль или email')));
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
+    late bool bo = Provider.of<IsAuth>(context, listen: true).isAuthenticated;
     return SafeArea(
         child: Scaffold(
             body: SingleChildScrollView(
@@ -68,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Text(bo ? "is" : "no"),
           const Text(
             'Login Screen',
             style: TextStyle(

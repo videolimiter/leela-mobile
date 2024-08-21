@@ -1,9 +1,4 @@
-import 'package:cookie_jar/cookie_jar.dart';
-import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:leela_mobile/src/api/cookies.dart';
 import 'package:leela_mobile/src/api/dio/dio_client.dart';
-import 'package:leela_mobile/src/config.dart';
 
 Future<bool> getUser() async {
   try {

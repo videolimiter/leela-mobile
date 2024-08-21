@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:leela_mobile/src/api/user.dart';
-import 'package:leela_mobile/src/features/auth/screens/welcome/welcome_screen.dart';
-import 'package:leela_mobile/src/pages/field/leela_field.dart';
-import 'package:leela_mobile/src/pages/leelapage.dart';
+import 'package:leela_mobile/src/core/authenticated.dart';
+import 'package:leela_mobile/src/features/auth/screens/auth_wrapper.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const LeelaGameApp());
+  runApp(MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => IsAuth())],
+      child: const LeelaGameApp()));
 }
 
 class LeelaGameApp extends StatelessWidget {
@@ -14,21 +15,9 @@ class LeelaGameApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Leela Game',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
-      home: FutureBuilder<bool>(
-        future: getUser(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data != false) {
-            // Если ответ положительный, показываем первый экран
-            return const LeelaPage();
-          } else {
-            // Если ответ отрицательный, показываем второй экран
-            return const WelcomeScreen();
-          }
-        },
-      ),
-    );
+        title: 'Leela Game',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark(),
+        home: const AuthWrapper());
   }
 }

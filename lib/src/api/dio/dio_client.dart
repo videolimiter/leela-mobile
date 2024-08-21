@@ -20,22 +20,27 @@ class DioClient {
     );
     dio = Dio(options);
     final cookieJar = CookieJar();
+
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (options, handler) async {
       final cookies = await loadCookies(LOGIN_URL);
-      if (cookies.isNotEmpty) {
+      if (cookies.length != 0 && options.path != LOGIN_URL) {
         options.headers = {
           'Cookie': cookies
               .map((cookie) => '${cookie.name}=${cookie.value}')
-              .join('; '),
+              .join(';'),
         };
       }
+
       if (kDebugMode) {
         print("app request data ${options.data}");
+        print(
+            'cookies ${cookies.map((cookie) => '${cookie.name}=${cookie.value}').join('; ')}');
+        print(options.headers);
+        print(options.path);
       }
       return handler.next(options);
     }, onResponse: (response, handler) async {
-      // Парсим куки из заголовка
       if (response.headers['set-cookie'] != null) {
         final cookies = await cookieJar.loadForRequest(Uri.parse(LOGIN_URL));
         await deleteCookies(LOGIN_URL);
