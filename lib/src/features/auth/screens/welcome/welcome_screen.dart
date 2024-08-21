@@ -19,10 +19,9 @@ class WelcomeScreen extends StatelessWidget {
                   children: [
                     Expanded(
                         child: OutlinedButton(
-                      onPressed: () => Navigator.pop(
-                        context,
+                      onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => const LoginScreen()),
+                            builder: (BuildContext context) => LoginScreen()),
                       ),
                       child: const Text('Login'),
                     )),
