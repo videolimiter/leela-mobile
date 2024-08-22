@@ -41,8 +41,20 @@ class IsAuth extends ChangeNotifier {
     }
   }
 
-  Future<void> logout() async {
-    setIsAuthenticated(false);
+  Future<bool?> logout() async {
+    try {
+      final response = await DioClient.instance.dio.post(
+        'http://192.168.1.2:3000/api/logout',
+      );
+      setIsAuthenticated(false);
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<bool?> checkCurrentUser() async {

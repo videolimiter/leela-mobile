@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:leela_mobile/src/pages/field/cell.dart';
+import 'package:leela_mobile/src/features/leela/field/cell.dart';
 
 class LeelaField extends StatelessWidget {
   const LeelaField({super.key});
