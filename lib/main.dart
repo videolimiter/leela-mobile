@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:leela_mobile/src/api/user.dart';
 import 'package:leela_mobile/src/core/authenticated.dart';
 import 'package:leela_mobile/src/features/auth/screens/auth_wrapper.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +22,9 @@ class LeelaGameApp extends StatelessWidget {
         future: Provider.of<IsAuth>(context, listen: false).checkCurrentUser(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           } else {
             return const AuthWrapper();
           }
