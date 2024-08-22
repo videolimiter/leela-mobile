@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:leela_mobile/src/api/user.dart';
 import 'package:leela_mobile/src/core/authenticated.dart';
 import 'package:leela_mobile/src/design/colors.dart';
-import 'package:leela_mobile/src/design/dimensions.dart';
 import 'package:leela_mobile/src/features/leela/field/leela_field.dart';
 import 'package:provider/provider.dart';
 
