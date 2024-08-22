@@ -35,8 +35,14 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     final authProvider = Provider.of<IsAuth>(context, listen: false);
-
     await authProvider.login(_emailController.text, _passwordController.text);
+    if (authProvider.isAuthenticated) {
+      Navigator.of(context).pop(); // Возврат на предыдущий экран
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ошибка входа')),
+      );
+    }
 
     // try {
     //   final response =

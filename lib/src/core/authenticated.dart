@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -6,12 +8,17 @@ import 'package:leela_mobile/src/api/dio/dio_client.dart';
 import 'package:leela_mobile/src/config.dart';
 
 class IsAuth extends ChangeNotifier {
+  final _authController = StreamController<bool>.broadcast();
+
+  Stream<bool> get authStream => _authController.stream;
+
   bool _isAuthenticated = false;
 
   bool get isAuthenticated => _isAuthenticated;
 
   void setIsAuthenticated(bool value) {
     _isAuthenticated = value;
+    _authController.add(value);
     notifyListeners();
   }
 
@@ -38,7 +45,7 @@ class IsAuth extends ChangeNotifier {
     setIsAuthenticated(false);
   }
 
-  Future<void> checkCurrentUser() async {
+  Future<bool?> checkCurrentUser() async {
     try {
       final response = await DioClient.instance.get(
         'http://192.168.1.2:3000/api/user',

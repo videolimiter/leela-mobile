@@ -1,5 +1,6 @@
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:leela_mobile/src/api/cookies.dart';
 import 'package:leela_mobile/src/config.dart';
@@ -20,7 +21,7 @@ class DioClient {
     );
     dio = Dio(options);
     final cookieJar = CookieJar();
-
+    dio.interceptors.add(CookieManager(cookieJar));
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (options, handler) async {
       final cookies = await loadCookies(LOGIN_URL);
@@ -43,12 +44,16 @@ class DioClient {
     }, onResponse: (response, handler) async {
       if (response.headers['set-cookie'] != null) {
         final cookies = await cookieJar.loadForRequest(Uri.parse(LOGIN_URL));
+
         await deleteCookies(LOGIN_URL);
         await saveCookies(LOGIN_URL, cookies);
       }
 
       if (kDebugMode) {
         print("app response data ${response.data}");
+
+        print("options.headers");
+        print(response.headers);
       }
       return handler.next(response);
     }, onError: (DioException e, handler) async {
