@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:leela_mobile/src/core/authenticated.dart';
+import 'package:leela_mobile/src/features/auth/screens/auth_wrapper.dart';
 import 'package:leela_mobile/src/features/auth/screens/login/login_screen.dart';
-import 'package:leela_mobile/src/features/leela/screens/leela_screen.dart';
 import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -14,7 +14,7 @@ class WelcomeScreen extends StatelessWidget {
     if (authProvider.isAuthenticated) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const LeelaScreen()),
+          MaterialPageRoute(builder: (context) => const AuthWrapper()),
         );
       });
     }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:leela_mobile/src/core/app/app_drawer.dart';
 import 'package:leela_mobile/src/features/dashboard/screens/dashboard_screen.dart';
-import 'package:leela_mobile/src/features/leela/screens/leela_borad.dart';
+import 'package:leela_mobile/src/features/leela/field/leela_borad.dart';
+import 'package:leela_mobile/src/features/leela/screens/leela_screen.dart';
 
 class LoggedApp extends StatelessWidget {
   const LoggedApp({super.key});
@@ -30,7 +31,7 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   void initState() {
     super.initState();
-    _currentBody = const LeelaBoard(playerPositions: [3, 4, 5, 7, 8, 40, 9]);
+    _currentBody = const LeelaScreen();
   }
 
   void _navigateTo(String route) {
@@ -39,8 +40,7 @@ class _MainLayoutState extends State<MainLayout> {
       switch (route) {
         case '/':
           _appBarTitle = 'Главная';
-          _currentBody =
-              const LeelaBoard(playerPositions: [3, 4, 5, 7, 8, 40, 9]);
+          _currentBody = const LeelaScreen();
           break;
         case '/profile':
           _appBarTitle = 'Профиль';
@@ -52,8 +52,7 @@ class _MainLayoutState extends State<MainLayout> {
           break;
         default:
           _appBarTitle = 'Главная';
-          _currentBody =
-              const LeelaBoard(playerPositions: [3, 4, 5, 7, 8, 40, 9]);
+          _currentBody = const LeelaScreen();
       }
     });
     Navigator.of(context).pop(); // Закрываем Drawer после навигации
@@ -79,8 +78,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-        child: LeelaBoard(playerPositions: [3, 4, 5, 7, 8, 40, 9]));
+    return const Center(child: LeelaScreen());
   }
 }
 
