@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:leela_mobile/src/core/authenticated.dart';
+import 'package:leela_mobile/src/core/app/app_drawer.dart';
 import 'package:leela_mobile/src/features/dashboard/screens/dashboard_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:leela_mobile/src/features/leela/screens/leela_borad.dart';
 
 class LoggedApp extends StatelessWidget {
   const LoggedApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Leela',
-      home: const MainLayout(),
+      home: MainLayout(),
     );
   }
 }
@@ -24,22 +24,36 @@ class MainLayout extends StatefulWidget {
 
 class _MainLayoutState extends State<MainLayout> {
   String _appBarTitle = 'Главная';
-  Widget _currentBody = GridDashboard();
+  late Widget _currentBody;
+  String _currentRoute = '/';
+
+  @override
+  void initState() {
+    super.initState();
+    _currentBody = const LeelaBoard(playerPositions: [3, 4, 5, 7, 8, 40, 9]);
+  }
 
   void _navigateTo(String route) {
     setState(() {
+      _currentRoute = route;
       switch (route) {
         case '/':
           _appBarTitle = 'Главная';
-          _currentBody = GridDashboard();
+          _currentBody =
+              const LeelaBoard(playerPositions: [3, 4, 5, 7, 8, 40, 9]);
           break;
         case '/profile':
           _appBarTitle = 'Профиль';
           _currentBody = const ProfileScreen();
           break;
+        case '/user/games':
+          _appBarTitle = 'Мои игры';
+          _currentBody = const MyGamesScreen();
+          break;
         default:
           _appBarTitle = 'Главная';
-          _currentBody = GridDashboard();
+          _currentBody =
+              const LeelaBoard(playerPositions: [3, 4, 5, 7, 8, 40, 9]);
       }
     });
     Navigator.of(context).pop(); // Закрываем Drawer после навигации
@@ -52,26 +66,9 @@ class _MainLayoutState extends State<MainLayout> {
         title: Text(_appBarTitle),
       ),
       body: _currentBody,
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            const DrawerHeader(child: Text('Меню')),
-            ListTile(
-              title: const Text("Главная"),
-              onTap: () => _navigateTo('/'),
-            ),
-            ListTile(
-              title: const Text("Профиль"),
-              onTap: () => _navigateTo('/profile'),
-            ),
-            ListTile(
-              title: const Text("Logout"),
-              onTap: () {
-                Provider.of<IsAuth>(context, listen: false).logout();
-              },
-            ),
-          ],
-        ),
+      drawer: AppDrawer(
+        currentRoute: _currentRoute, // Передаем текущий маршрут в AppDrawer
+        onNavigate: _navigateTo, // Передаем функцию навигации
       ),
     );
   }
@@ -82,6 +79,16 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Профиль пользователя'));
+    return const Center(
+        child: LeelaBoard(playerPositions: [3, 4, 5, 7, 8, 40, 9]));
+  }
+}
+
+class MyGamesScreen extends StatelessWidget {
+  const MyGamesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(child: Text('Игры пользователя'));
   }
 }

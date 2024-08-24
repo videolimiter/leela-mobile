@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:leela_mobile/src/core/app/logged_app.dart';
 import 'package:leela_mobile/src/core/authenticated.dart';
 import 'package:leela_mobile/src/features/auth/screens/welcome/welcome_screen.dart';
-import 'package:leela_mobile/src/features/leela/screens/leela_screen.dart';
-import 'package:leela_mobile/src/core/app/logged_app.dart';
 import 'package:provider/provider.dart';
 
 Stream oneSecStream(Duration refreshTime) async* {
