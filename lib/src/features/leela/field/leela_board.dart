@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:leela_mobile/src/core/helpers/getCellIndex.dart';
-import 'package:leela_mobile/src/features/leela/field/back_image.dart';
 import 'package:leela_mobile/src/features/leela/field/cell.dart';
 import 'package:leela_mobile/src/features/leela/model/leela.dart';
 
@@ -40,45 +39,26 @@ class _LeelaBoardState extends State<LeelaBoard> {
                     maxHeight:
                         double.infinity, // Максимальная высота не ограничена
                   ),
-                  child: Stack(
-                    children: [
-                      // Используем Positioned.fill для изображения
-                      Center(
-                          child: Stack(children: [
-                        Image.asset('assets/images/field_en.jpeg',
-                            fit: BoxFit.cover),
-                        Positioned(
-                          top: 46,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: Transform.scale(
-                            scaleX:
-                                0.927, // Вы можете изменить масштаб по своему усмотрению
-                            scaleY: 0.94,
-                            child: GridView.builder(
-                              physics:
-                                  const AlwaysScrollableScrollPhysics(), // Добавлено для прокрутки
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 9, // 9 клеток в ряд
-                              ),
-                              itemCount: 72,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  // Добавляем GestureDetector для обработки нажатий
-                                  onTap: () => _toggleCellSelection(
-                                      getCellIndex(index)), // Обработка нажатия
-                                  child:
-                                      _buildCell(context, getCellIndex(index)),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ]))
-                    ],
-                  ))),
+                  child: Center(
+                      child: Stack(children: [
+                    GridView.builder(
+                      physics:
+                          const AlwaysScrollableScrollPhysics(), // Добавлено для прокрутки
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 9, // 9 клеток в ряд
+                      ),
+                      itemCount: 72,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          // Добавляем GestureDetector для обработки нажатий
+                          onTap: () => _toggleCellSelection(
+                              getCellIndex(index)), // Обработка нажатия
+                          child: _buildCell(context, getCellIndex(index)),
+                        );
+                      },
+                    ),
+                  ])))),
         );
       },
     );
@@ -97,6 +77,8 @@ class _LeelaBoardState extends State<LeelaBoard> {
   }
 
   Widget _buildCell(BuildContext context, int index) {
+    // Интерполяция цвета от синего к красному
+
     return Cell(
       index: index,
       isSelected: _selectedCells.contains(index),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leela_mobile/src/core/helpers/getGradientColor.dart';
 import 'package:leela_mobile/src/features/leela/model/leela.dart';
 
 class Cell extends StatefulWidget {
@@ -27,18 +28,19 @@ class _CellState extends State<Cell> {
   @override
   Widget build(BuildContext context) {
     Color cellColor;
+
     Border border =
         Border.all(color: const Color.fromARGB(120, 0, 0, 0), width: 2);
 
     if (widget.isSelected) {
-      cellColor = Colors.blue;
-      border = Border.all(color: Colors.purple, width: 3);
+      cellColor = Colors.greenAccent;
+      border = Border.all(color: Colors.white, width: 2);
     } else if (widget.isPlayerPosition) {
       cellColor = Colors.green;
-      border = Border.all(color: Colors.red, width: 1);
+      border = Border.all(color: Colors.transparent, width: 0);
     } else {
-      cellColor = Colors.transparent;
-      border = Border.all(color: Colors.transparent, width: 1);
+      cellColor = getGradientColor(widget.index);
+      border = Border.all(color: Colors.transparent, width: 0);
     }
 
     if (_isHovered) {
@@ -52,11 +54,11 @@ class _CellState extends State<Cell> {
         onTap: () => widget.onTap(),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 400),
-          // margin: const EdgeInsets.all(0),
+          margin: const EdgeInsets.all(0.1),
           decoration: BoxDecoration(
             color: cellColor,
             // borderRadius: BorderRadius.circular(8),
-            // border: border,
+            border: border,
           ),
           child: Center(
             child: Text(
