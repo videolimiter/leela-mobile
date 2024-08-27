@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:leela_mobile/src/features/leela/field/leela_borad.dart';
+import 'package:leela_mobile/src/features/leela/field/leela_board.dart';
+import 'package:leela_mobile/src/features/leela/model/leela.dart';
 
 class LeelaScreen extends StatefulWidget {
   const LeelaScreen({super.key});
@@ -24,6 +25,14 @@ class _LeelaScreenState extends State<LeelaScreen>
     super.dispose();
   }
 
+  final List<Player> players = [
+    Player(id: 1, name: 'Player 1', role: 'Player'),
+    Player(id: 2, name: 'Player 2', role: 'Player', cellId: 3),
+    Player(id: 3, name: 'Player 3', role: 'Player'),
+    Player(id: 4, name: 'Player 4', role: 'Player', cellId: 5),
+    Player(id: 5, name: 'Player 5', role: 'Player', cellId: 66),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,9 +46,12 @@ class _LeelaScreenState extends State<LeelaScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          Center(child: LeelaBoard(playerPositions: [3, 4, 5, 7, 8, 40, 9])),
-          Center(child: Text('История')),
+        children: [
+          Center(
+              child: LeelaBoard(
+            players: players,
+          )),
+          const Center(child: Text('История')),
         ],
       ),
       bottomNavigationBar: TabBar(

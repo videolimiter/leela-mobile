@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:leela_mobile/src/core/app/app_drawer.dart';
 import 'package:leela_mobile/src/features/dashboard/screens/dashboard_screen.dart';
-import 'package:leela_mobile/src/features/leela/field/leela_borad.dart';
+import 'package:leela_mobile/src/features/leela/field/leela_board.dart';
 import 'package:leela_mobile/src/features/leela/screens/leela_screen.dart';
 
 class LoggedApp extends StatelessWidget {

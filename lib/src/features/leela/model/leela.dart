@@ -60,13 +60,17 @@ class Guide {
 class Player {
   final double id;
   final String name;
-  late String avatarImage;
+  late String? avatarImage;
   final String role;
-  late String description;
+  late String? description;
+  late int? cellId;
 
   Player({
+    this.cellId,
     required this.id,
     required this.name,
     required this.role,
+    this.description,
+    this.avatarImage,
   });
 }
