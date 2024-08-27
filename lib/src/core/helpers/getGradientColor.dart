@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 Color getGradientColor(int index) {
   const List<Color> colors = [
+    Colors.purple,
     Colors.blue,
     Colors.cyan,
     Colors.green,
     Colors.yellow,
+    Colors.orange,
     Colors.red,
-    Colors.pink,
   ];
   int colorCount = colors.length;
   double position = index / 71 * (colorCount - 1);

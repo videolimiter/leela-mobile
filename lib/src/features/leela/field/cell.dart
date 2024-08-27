@@ -62,8 +62,9 @@ class _CellState extends State<Cell> {
           ),
           child: Center(
             child: Text(
-              '${widget.index}',
-              style: const TextStyle(fontSize: 16),
+              leelaCellTitles[widget.index - 1].title,
+              style: const TextStyle(fontSize: 10),
+              textAlign: TextAlign.center,
             ),
           ),
         ),
